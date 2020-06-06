@@ -4,7 +4,7 @@ all:install
 
 install:install-spconv
 	sudo apt install python3 python3-pip -y
-	# pip3 install -r requirements.txt --user -i https://mirrors.sustc.us/pypi/simple
+	pip3 install -r requirements.txt --user -i https://mirrors.sustc.us/pypi/simple
 	python3 setup.py develop --user
 
 install-spconv:
