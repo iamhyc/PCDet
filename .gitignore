@@ -3,4 +3,8 @@
 venv/
 *.idea/
 *.so
+.vscode
 data/
+build/
+pcdet.egg-info/
+pcdet/version.py
