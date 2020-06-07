@@ -1,5 +1,5 @@
 SHELL:=/bin/bash
-MODEL_FILE:=../model/PartA2.pth
+MODEL_FILE:=../model/PartA2_car.pth
 CONFIG_FILE:=cfgs/PartA2_car.yaml
 BATCH_SIZE:=4
 
