@@ -5,6 +5,8 @@ venv/
 *.so
 .vscode
 data/
+model/
 build/
+output/
 pcdet.egg-info/
 pcdet/version.py

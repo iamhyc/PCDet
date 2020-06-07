@@ -1,4 +1,7 @@
 SHELL:=/bin/bash
+MODEL_FILE:=../model/PartA2.pth
+CONFIG_FILE:=cfgs/PartA2_car.yaml
+BATCH_SIZE:=4
 
 all:install
 
@@ -21,3 +24,15 @@ install-spconv:
 
 remove-spconv:
 	pip3 uninstall spconv
+
+test:
+	cd tools; \
+	python3 test.py --cfg_file $(CONFIG_FILE) --batch_size $(BATCH_SIZE) --ckpt $(MODEL_FILE) \
+    --set MODEL.RPN.BACKBONE.NAME UNetV0 MODEL.RPN.RPN_HEAD.ARGS use_binary_dir_classifier:True
+
+train:
+	cd tools; \
+	python3 train.py --cfg_file $(CONFIG_FILE) --batch_size $(BATCH_SIZE)
+
+clean:
+	rm -rf output
