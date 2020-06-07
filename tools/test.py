@@ -51,7 +51,8 @@ def parge_config():
 
 def eval_single_ckpt(model, test_loader, args, eval_output_dir, logger, epoch_id):
     # load checkpoint
-    model.load_params_from_file(filename=args.ckpt, logger=logger)
+    model_path = os.path.join('../model', args.ckpt)
+    model.load_params_from_file(filename=model_path, logger=logger)
     model.cuda()
 
     # start evaluation

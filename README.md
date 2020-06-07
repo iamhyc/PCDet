@@ -100,6 +100,7 @@ All the config files are within `tools/cfgs/`.
 ```shell script
 python test.py --cfg_file ${CONFIG_FILE} --batch_size 4 --ckpt ${CKPT}
 ```
+> The '--ckpt' will load param file from `model` folder, by default.
 
 * For example, for testing with the above provided `Part-A^2` model, please run the following command (here we add `--set` to modify some default parameters to match with the training setting of the provided `Part-A^2` model, and other provided models do not need to add it): 
 

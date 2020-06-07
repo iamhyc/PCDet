@@ -5,7 +5,7 @@ venv/
 *.so
 .vscode
 data/
-model/
+model/*
 build/
 output/
 pcdet.egg-info/
