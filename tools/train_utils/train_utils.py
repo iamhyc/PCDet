@@ -4,6 +4,7 @@ import glob
 import tqdm
 from torch.nn.utils import clip_grad_norm_
 
+global train_one_epoch_wrap
 
 def train_one_epoch(model, optimizer, train_loader, model_func, lr_scheduler, accumulated_iter, optim_cfg,
                     rank, tbar, tb_log=None, leave_pbar=False):
@@ -58,7 +59,6 @@ def train_one_epoch(model, optimizer, train_loader, model_func, lr_scheduler, ac
         pbar.close()
     return accumulated_iter
 
-
 def train_model(model, optimizer, train_loader, model_func, lr_scheduler, optim_cfg,
                 start_epoch, total_epochs, start_iter, rank, tb_log, ckpt_save_dir, train_sampler=None,
                 lr_warmup_scheduler=None, ckpt_save_interval=1, max_ckpt_save_num=50):
@@ -83,8 +83,7 @@ def train_model(model, optimizer, train_loader, model_func, lr_scheduler, optim_
 
             # save trained model
             trained_epoch = cur_epoch + 1
-            if trained_epoch % ckpt_save_interval == 0 and rank == 0:
-
+            if rank==0 and trained_epoch % ckpt_save_interval == 0: #NOTE: only save for first-rank task
                 ckpt_list = glob.glob(str(ckpt_save_dir / 'checkpoint_epoch_*.pth'))
                 ckpt_list.sort(key=os.path.getmtime)
 
@@ -96,6 +95,10 @@ def train_model(model, optimizer, train_loader, model_func, lr_scheduler, optim_
                 save_checkpoint(
                     checkpoint_state(model, optimizer, trained_epoch, accumulated_iter), filename=ckpt_name,
                 )
+                pass
+            pass # end for 'for'
+        pass #end for 'with'
+    pass
 
 
 def model_state_to_cpu(model_state):

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import torch
 import torch.nn as nn
@@ -15,8 +16,7 @@ import argparse
 import datetime
 import glob
 
-
-def parge_config():
+def parse_config():
     parser = argparse.ArgumentParser(description='arg parser')
     parser.add_argument('--cfg_file', type=str, default=None, help='specify the config for training')
 
@@ -28,7 +28,7 @@ def parge_config():
     parser.add_argument('--ckpt', type=str, default=None, help='checkpoint to start from')
     parser.add_argument('--pretrained_model', type=str, default=None, help='pretrained_model')
     parser.add_argument('--launcher', choices=['none', 'pytorch', 'slurm'], default='none')
-    parser.add_argument('--tcp_port', type=int, default=18888, help='tcp port for distrbuted training')
+    parser.add_argument('--tcp_port', type=int, default=18888, help='tcp port for distributed training')
     parser.add_argument('--sync_bn', action='store_true', default=False, help='whether to use sync bn')
     parser.add_argument('--fix_random_seed', action='store_true', default=False, help='whether to use sync bn')
     parser.add_argument('--ckpt_save_interval', type=int, default=2, help='number of training epochs')
@@ -46,9 +46,8 @@ def parge_config():
 
     return args, cfg
 
-
 def main():
-    args, cfg = parge_config()
+    args, cfg = parse_config()
     if args.launcher == 'none':
         dist_train = False
     else:
@@ -57,7 +56,7 @@ def main():
         )
         dist_train = True
     if args.fix_random_seed:
-        common_utils.set_random_seed(666)
+        common_utils.set_random_seed(11112)
 
     output_dir = cfg.ROOT_DIR / 'output' / cfg.TAG / args.extra_tag
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -89,7 +88,7 @@ def main():
     model = build_network(train_set)
     if args.sync_bn:
         model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
-    model.cuda()
+    model.cuda() #NOTE: torch.nn.module.cuda: buffer parameters to GPU
 
     optimizer = build_optimizer(model, cfg.MODEL.TRAIN.OPTIMIZATION)
 
@@ -143,7 +142,6 @@ def main():
     )
 
     logger.info('**********************End training**********************')
-
 
 if __name__ == '__main__':
     main()

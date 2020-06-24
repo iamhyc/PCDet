@@ -1,7 +1,7 @@
 SHELL:=/bin/bash
 MODEL_FILE:=PartA2_car.pth
 CONFIG_FILE:=cfgs/PartA2_car.yaml
-BATCH_SIZE:=4
+BATCH_SIZE:=1
 
 all:install
 
@@ -11,7 +11,7 @@ install:install-spconv
 	python3 setup.py develop --user
 
 install-spconv:
-	@read -p 'Please ensure you have CUDA 9.0+ and cuDNN installed! (press ENTER to continue...)'
+	@read -p 'Please ensure you have CUDA 10.0+ and cuDNN installed! (press ENTER to continue...)'
 
 	sudo apt-get install libboost-all-dev -y
 	sudo apt install python3 python3-pip -y

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#WARNING: please refer to this README before using: https://github.com/pytorch/pytorch/blob/master/torch/distributed/launch.py
 
 set -x
 NGPUS=$1
