@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 import argparse
 import subprocess as sp
+import socket
 from enum import Enum
-from multiprocessing.shared_memory import SharedMemory
-
-from train_utils.fed_utils import *
 
 class State(Enum):
     INIT        = 0x01

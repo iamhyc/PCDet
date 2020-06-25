@@ -2,6 +2,7 @@
 import os
 import torch
 import torch.nn as nn
+import torch.distributed as dist
 from tensorboardX import SummaryWriter
 from pcdet.config import cfg, log_config_to_file, cfg_from_list, cfg_from_yaml_file
 from pcdet.utils import common_utils
@@ -9,7 +10,7 @@ from pcdet.datasets import build_dataloader
 from pcdet.models import build_network, model_fn_decorator
 from train_utils.optimization import build_optimizer, build_scheduler
 from train_utils.train_utils import train_model
-import torch.distributed as dist
+from train_utils.fed_utils import FedTrainingUtility
 
 from pathlib import Path
 import argparse
@@ -28,6 +29,7 @@ def parse_config():
     parser.add_argument('--ckpt', type=str, default=None, help='checkpoint to start from')
     parser.add_argument('--pretrained_model', type=str, default=None, help='pretrained_model')
     parser.add_argument('--launcher', choices=['none', 'pytorch', 'slurm'], default='none')
+    parser.add_argument('--federated', choices=['none', 'sync', 'async'], default='none') #NOTE: for federated learning
     parser.add_argument('--tcp_port', type=int, default=18888, help='tcp port for distributed training')
     parser.add_argument('--sync_bn', action='store_true', default=False, help='whether to use sync bn')
     parser.add_argument('--fix_random_seed', action='store_true', default=False, help='whether to use sync bn')
@@ -122,6 +124,7 @@ def main():
 
     # -----------------------start training---------------------------
     logger.info('**********************Start training %s(%s)**********************' % (cfg.TAG, args.extra_tag))
+    fed_util = FedTrainingUtility(args.federated) if (args.federated and cfg.LOCAL_RANK==0) else None
     train_model(
         model,
         optimizer,
@@ -138,7 +141,8 @@ def main():
         train_sampler=train_sampler,
         lr_warmup_scheduler=lr_warmup_scheduler,
         ckpt_save_interval=args.ckpt_save_interval,
-        max_ckpt_save_num=args.max_ckpt_save_num
+        max_ckpt_save_num=args.max_ckpt_save_num,
+        fed_util=fed_util
     )
 
     logger.info('**********************End training**********************')

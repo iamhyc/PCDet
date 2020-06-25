@@ -1,4 +1,6 @@
 import pickle, codecs
+import socket
+import torch
 
 def objdump_pickle(obj, file_path=''):
     if file_path:
@@ -20,4 +22,20 @@ def objload_pickle(obj_str, isFile=False):
     else:
         _decode_str = codecs.decode(obj_str.encode(), 'base64')
         return pickle.loads(_decode_str)
+    pass
+
+class FedTrainingUtility(object):
+    def __init__(self, method):
+        self.method = 'sync' if method=='sync' else 'async'
+        pass
+
+    def report_and_fetch(self, model_state):
+        if self.method=='sync':
+            pass
+        elif self.method=='async': #TODO: todo
+            return None
+        else:
+            return None
+        pass
+
     pass

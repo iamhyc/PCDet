@@ -61,7 +61,8 @@ def train_one_epoch(model, optimizer, train_loader, model_func, lr_scheduler, ac
 
 def train_model(model, optimizer, train_loader, model_func, lr_scheduler, optim_cfg,
                 start_epoch, total_epochs, start_iter, rank, tb_log, ckpt_save_dir, train_sampler=None,
-                lr_warmup_scheduler=None, ckpt_save_interval=1, max_ckpt_save_num=50):
+                lr_warmup_scheduler=None, ckpt_save_interval=1, max_ckpt_save_num=50,
+                fed_util=None):
     accumulated_iter = start_iter
     with tqdm.trange(start_epoch, total_epochs, desc='epochs', dynamic_ncols=True, leave=(rank == 0)) as tbar:
         for cur_epoch in tbar:
@@ -91,10 +92,13 @@ def train_model(model, optimizer, train_loader, model_func, lr_scheduler, optim_
                     for cur_file_idx in range(0, len(ckpt_list) - max_ckpt_save_num + 1):
                         os.remove(ckpt_list[cur_file_idx])
 
-                ckpt_name = ckpt_save_dir / ('checkpoint_epoch_%d' % trained_epoch)
-                save_checkpoint(
-                    checkpoint_state(model, optimizer, trained_epoch, accumulated_iter), filename=ckpt_name,
-                )
+                state_collection = checkpoint_state(model, optimizer, trained_epoch, accumulated_iter)
+                if fed_util:
+                    new_model_state = fed_util.report_and_fetch(state_collection['model_state'])
+                    model.load_state_dict(new_model_state) if new_model_state else None
+                else:
+                    ckpt_name = ckpt_save_dir / ('checkpoint_epoch_%d' % trained_epoch)
+                    save_checkpoint(state_collection, filename=ckpt_name)
                 pass
             pass # end for 'for'
         pass #end for 'with'
