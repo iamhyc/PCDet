@@ -38,40 +38,16 @@ All models are trained with 8 GPUs and are available for download.
 
 
 ## Installation
-
-### Requirements
-All the codes are tested in the following environment:
-* Linux (tested on Ubuntu 14.04/16.04)
-* Python 3.6+
-* PyTorch 1.1 or higher
-* CUDA 9.0 or higher
-
-
-### Install `pcdet`
-1. Clone this repository.
-```shell
-git clone https://github.com/sshaoshuai/PCDet.git
-```
-
-2. Install the dependent libraries as follows:
-
-* Install the dependent python libraries: 
-```
-pip install -r requirements.txt 
-```
-
-* Install the SparseConv library, we use the non-official implementation from [`spconv`](https://github.com/traveller59/spconv). Note that we use an old version of `spconv`, make sure you install the `spconv v1.0` ([commit 8da6f96](https://github.com/traveller59/spconv/tree/8da6f967fb9a054d8870c3515b1b44eca2103634)) instead of the latest one.
-
-3. Install this `pcdet` library by running the following command:
-```shell
-python setup.py develop
-```
+Please firstly ensure you have `CUDA 10.0+` and `cuDNN` installed.
+Then you just execute `make install` to install the following requirement:
+- python 3.6+, pip3
+- libboost-all-dev
+- cmake 3.17+
+- [spconv v1.0+](https://github.com/traveller59/spconv/tree/8da6f967fb9a054d8870c3515b1b44eca2103634)
+- python packages requirement in `requirements.txt`
 
 ## Dataset Preparation
-
 Currently we only support KITTI dataset, and contributions are welcomed to support more datasets.
-
-### KITTI Dataset
 * Please download the official [KITTI 3D object detection](http://www.cvlibs.net/datasets/kitti/eval_object.php?obj_benchmark=3d) dataset and organize the downloaded files as follows (the road planes could be downloaded from [here](https://drive.google.com/file/d/1d5mq0RXRnvHPVeKx6Q612z0YRO1t2wAp/view?usp=sharing), which are optional for data augmentation in the training): 
 
 ```
