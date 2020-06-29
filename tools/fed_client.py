@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import subprocess as sp
-import socket
+import socketio
 from enum import Enum
 
 class State(Enum):
@@ -16,7 +16,7 @@ class Action(Enum):
     pass
 
 class FedClient(object):
-    # python -m torch.distributed.launch --nproc_per_node=${NGPUS} train.py --launcher pytorch --cfg_file ${CONFIG_FILE} --batch_size ${BATCH_SIZE}
+    #args.exec: python -m torch.distributed.launch --nproc_per_node=${NGPUS} train.py --launcher pytorch --cfg_file ${CONFIG_FILE} --batch_size ${BATCH_SIZE}
     pass
 
 def main(args):
@@ -24,10 +24,10 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--gpu", type=int, required=True, help="which GPU to run")
-    parser.add_argument("--config_file", type=str, required=True, help="task config file")
-    parser.add_argument("--ignore_load", default=True, help="whether ignore load or not")
-    parser.add_argument("--port", type=int, required=True, help="server port")
+    parser.add_argument('--addr', type=str, default='127.0.0.1:11112',
+                        help='federated server address')
+    parser.add_argument('--exec', type=str, required=True,
+                        help='the script or command to call up traning process.')
     args = parser.parse_args()
 
     main(args)
